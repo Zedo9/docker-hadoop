@@ -1,0 +1,121 @@
+
+MapReduce Preliminary Labs 
+Instructor: Dr. Rim Moussa
+ 
+--Illustrative example #1 of MapReduce
+--
+
+//compile and create jar
+javac -classpath `hadoop classpath` -d /home/rym/Desktop/Labs_MR/MaxTemp /home/rym/Desktop/Labs_MR/MaxTemp/src/*.java 
+jar -cvf /home/rym/Desktop/Labs_MR/MaxTemp.jar -C /home/rym/Desktop/Labs_MR/MaxTemp/ .
+
+//format name node hadoop
+
+cd $HADOOP_HOME
+bin/hdfs namenode -format
+
+//start hadoop
+cd $HADOOP_HOME/sbin/
+start-dfs.sh
+start-yarn.sh
+jps
+
+-----------
+14626 NodeManager
+14453 ResourceManager
+13095 NameNode
+15066 Jps
+13499 DataNode
+13869 SecondaryNameNode
+-----------
+
+// make a directory named ncdc_data
+hadoop dfs -mkdir /ncdc_data
+// copy input files 1901 and 1902 to your HDF:
+hadoop dfs -copyFromLocal /home/rym/Desktop/Labs_MR/MaxTemp/NCDC_data/1901 /ncdc_data/
+hadoop dfs -copyFromLocal /home/rym/Desktop/Labs_MR/MaxTemp/NCDC_data/1902 /ncdc_data/
+hadoop dfs -ls /ncdc_data
+
+
+hadoop jar /home/rym/Desktop/Labs_MR/MaxTemp.jar src.MaxTemp  /ncdc_data/ /results_maxtemp/
+
+--------
+hadoop jar /home/rym/Desktop/Labs_MR/MaxTemp.jar src.MaxTemp  /ncdc_data/ /results_maxtemp/
+18/10/13 21:07:19 INFO client.RMProxy: Connecting to ResourceManager at /0.0.0.0:8032
+18/10/13 21:07:20 WARN mapreduce.JobResourceUploader: Hadoop command-line option parsing not performed. Implement the Tool interface and execute your application with ToolRunner to remedy this.
+18/10/13 21:07:20 INFO input.FileInputFormat: Total input paths to process : 2
+18/10/13 21:07:20 INFO mapreduce.JobSubmitter: number of splits:2
+18/10/13 21:07:20 INFO mapreduce.JobSubmitter: Submitting tokens for job: job_1539460673249_0002
+18/10/13 21:07:21 INFO impl.YarnClientImpl: Submitted application application_1539460673249_0002
+18/10/13 21:07:21 INFO mapreduce.Job: The url to track the job: http://rym-ThinkPad-T420:8088/proxy/application_1539460673249_0002/
+18/10/13 21:07:21 INFO mapreduce.Job: Running job: job_1539460673249_0002
+18/10/13 21:07:27 INFO mapreduce.Job: Job job_1539460673249_0002 running in uber mode : false
+18/10/13 21:07:27 INFO mapreduce.Job:  map 0% reduce 0%
+18/10/13 21:07:33 INFO mapreduce.Job:  map 100% reduce 0%
+18/10/13 21:07:38 INFO mapreduce.Job:  map 100% reduce 100%
+18/10/13 21:07:38 INFO mapreduce.Job: Job job_1539460673249_0002 completed successfully
+18/10/13 21:07:38 INFO mapreduce.Job: Counters: 49
+	File System Counters
+		FILE: Number of bytes read=144425
+		FILE: Number of bytes written=632742
+		FILE: Number of read operations=0
+		FILE: Number of large read operations=0
+		FILE: Number of write operations=0
+		HDFS: Number of bytes read=1777370
+		HDFS: Number of bytes written=18
+		HDFS: Number of read operations=9
+		HDFS: Number of large read operations=0
+		HDFS: Number of write operations=2
+	Job Counters 
+		Launched map tasks=2
+		Launched reduce tasks=1
+		Data-local map tasks=2
+		Total time spent by all maps in occupied slots (ms)=8691
+		Total time spent by all reduces in occupied slots (ms)=2787
+		Total time spent by all map tasks (ms)=8691
+		Total time spent by all reduce tasks (ms)=2787
+		Total vcore-seconds taken by all map tasks=8691
+		Total vcore-seconds taken by all reduce tasks=2787
+		Total megabyte-seconds taken by all map tasks=8899584
+		Total megabyte-seconds taken by all reduce tasks=2853888
+	Map-Reduce Framework
+		Map input records=13130
+		Map output records=13129
+		Map output bytes=118161
+		Map output materialized bytes=144431
+		Input split bytes=202
+		Combine input records=0
+		Combine output records=0
+		Reduce input groups=2
+		Reduce shuffle bytes=144431
+		Reduce input records=13129
+		Reduce output records=2
+		Spilled Records=26258
+		Shuffled Maps =2
+		Failed Shuffles=0
+		Merged Map outputs=2
+		GC time elapsed (ms)=249
+		CPU time spent (ms)=3920
+		Physical memory (bytes) snapshot=702308352
+		Virtual memory (bytes) snapshot=5770162176
+		Total committed heap usage (bytes)=553648128
+	Shuffle Errors
+		BAD_ID=0
+		CONNECTION=0
+		IO_ERROR=0
+		WRONG_LENGTH=0
+		WRONG_MAP=0
+		WRONG_REDUCE=0
+	File Input Format Counters 
+		Bytes Read=1777168
+	File Output Format Counters 
+		Bytes Written=18
+--------
+
+//apres execution
+hadoop dfs -get /results_maxtemp/ /home/rym/Desktop/Labs_MR/
+
+
+//to do
+1. change nbr of reducers
+2. add a combiner

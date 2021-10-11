@@ -1,0 +1,48 @@
+
+12 MR Challenges
+Instructor: Dr. Rim Moussa
+
+send your solutions to: rim.moussa@gmail.com
+subject: MR-challenges-2019
+------------------------------------------------------------------------------------------------------------------------
+
+Challenge #1: add a combiner to MaxTemp.java and a second to InvIdx.java
+check hadoop counts
+
+Challenge #2: change the number of reducers to 2 in class MaxTemp.java
+check the number of output files
+
+Challenge #3: add a threshold variable (from commandline) in order to select only frequent terms in class TermFreq.java
+(indic. add setup method in reducer class)
+
+All of the following challenges use TPCH-benchmark data and focus on relational ops implementation using MR
+
+Challenge #4: select customers (only names and phones) which c_segmentmarket is building 
+(indic no reducers)
+
+Challenge #5: join customer.tbl (big) and nation.tbl (small)
+(indic upload th file nation.tbl into Hadoop Cache and parse it in the setup method of the Mapper)
+
+Challenge #6: join customer.tbl (big) and orders.tbl (big)
+(indic hashjoin)
+
+Challenge #7: count customers for each region-name
+(indic workflow of 2 MR jobs, upload both nation.tbl and region.tbl into Hadoop Cache)
+
+Challenge #8: goal increase the number of mappers
+generate customer.tbl using SF=100
+repeat challenge #4 and change the input split to 64MB   
+check hadoop counts
+
+Challenge #9: 
+update container RAM/nbr of cores HW config for mappers and reducers (increase and decrease)
+check hadoop counts
+
+Challenge #10: 
+use LZO for compressing intermediate results
+repeat challenge #6
+check hadoop counts
+
+
+
+ 

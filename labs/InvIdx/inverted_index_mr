@@ -1,0 +1,121 @@
+
+MapReduce Preliminary Labs 
+Instructor: Dr. Rim Moussa
+ 
+--Illustrative example #2 of MapReduce
+--
+
+//compile and create jar
+javac -classpath `hadoop classpath` -d /home/rym/Desktop/Labs_MR/InvIdx /home/rym/Desktop/Labs_MR/InvIdx/src/*.java 
+jar -cvf /home/rym/Desktop/Labs_MR/InvIdx.jar -C /home/rym/Desktop/Labs_MR/InvIdx/ .
+
+//format name node
+cd $HADOOP_HOME
+bin/hdfs namenode -format
+
+//start hadoop
+cd $HADOOP_HOME/sbin/
+start-dfs.sh
+start-yarn.sh
+jps
+
+-----------
+14626 NodeManager
+14453 ResourceManager
+13095 NameNode
+15066 Jps
+13499 DataNode
+13869 SecondaryNameNode
+-----------
+
+// make a directory named inv_files
+hadoop dfs -mkdir /inv_files
+// copy input files to your HDFS:
+hadoop dfs -copyFromLocal /home/rym/Desktop/Labs_MR/InvIdx/data/* /inv_files/
+hadoop dfs -ls /inv_files/
+
+
+hadoop jar /home/rym/Desktop/Labs_MR/InvIdx.jar src.InvIdx  /inv_files/ /results_invidx/
+
+--------
+hadoop jar /home/rym/Desktop/Labs_MR/InvIdx.jar src.InvIdx  /inv_files/ /results_invidx/
+18/10/13 22:06:12 INFO client.RMProxy: Connecting to ResourceManager at /0.0.0.0:8032
+18/10/13 22:06:12 WARN mapreduce.JobResourceUploader: Hadoop command-line option parsing not performed. Implement the Tool interface and execute your application with ToolRunner to remedy this.
+18/10/13 22:06:12 INFO input.FileInputFormat: Total input paths to process : 2
+18/10/13 22:06:13 INFO mapreduce.JobSubmitter: number of splits:2
+18/10/13 22:06:13 INFO mapreduce.JobSubmitter: Submitting tokens for job: job_1539460673249_0003
+18/10/13 22:06:13 INFO impl.YarnClientImpl: Submitted application application_1539460673249_0003
+18/10/13 22:06:13 INFO mapreduce.Job: The url to track the job: http://rym-ThinkPad-T420:8088/proxy/application_1539460673249_0003/
+18/10/13 22:06:13 INFO mapreduce.Job: Running job: job_1539460673249_0003
+18/10/13 22:06:19 INFO mapreduce.Job: Job job_1539460673249_0003 running in uber mode : false
+18/10/13 22:06:19 INFO mapreduce.Job:  map 0% reduce 0%
+18/10/13 22:06:25 INFO mapreduce.Job:  map 100% reduce 0%
+18/10/13 22:06:30 INFO mapreduce.Job:  map 100% reduce 100%
+18/10/13 22:06:31 INFO mapreduce.Job: Job job_1539460673249_0003 completed successfully
+18/10/13 22:06:31 INFO mapreduce.Job: Counters: 49
+	File System Counters
+		FILE: Number of bytes read=169
+		FILE: Number of bytes written=344197
+		FILE: Number of read operations=0
+		FILE: Number of large read operations=0
+		FILE: Number of write operations=0
+		HDFS: Number of bytes read=288
+		HDFS: Number of bytes written=91
+		HDFS: Number of read operations=9
+		HDFS: Number of large read operations=0
+		HDFS: Number of write operations=2
+	Job Counters 
+		Launched map tasks=2
+		Launched reduce tasks=1
+		Data-local map tasks=2
+		Total time spent by all maps in occupied slots (ms)=7868
+		Total time spent by all reduces in occupied slots (ms)=2724
+		Total time spent by all map tasks (ms)=7868
+		Total time spent by all reduce tasks (ms)=2724
+		Total vcore-seconds taken by all map tasks=7868
+		Total vcore-seconds taken by all reduce tasks=2724
+		Total megabyte-seconds taken by all map tasks=8056832
+		Total megabyte-seconds taken by all reduce tasks=2789376
+	Map-Reduce Framework
+		Map input records=2
+		Map output records=11
+		Map output bytes=141
+		Map output materialized bytes=175
+		Input split bytes=202
+		Combine input records=0
+		Combine output records=0
+		Reduce input groups=5
+		Reduce shuffle bytes=175
+		Reduce input records=11
+		Reduce output records=5
+		Spilled Records=22
+		Shuffled Maps =2
+		Failed Shuffles=0
+		Merged Map outputs=2
+		GC time elapsed (ms)=281
+		CPU time spent (ms)=2240
+		Physical memory (bytes) snapshot=700702720
+		Virtual memory (bytes) snapshot=5771018240
+		Total committed heap usage (bytes)=549978112
+	Shuffle Errors
+		BAD_ID=0
+		CONNECTION=0
+		IO_ERROR=0
+		WRONG_LENGTH=0
+		WRONG_MAP=0
+		WRONG_REDUCE=0
+	File Input Format Counters 
+		Bytes Read=86
+	File Output Format Counters 
+		Bytes Written=91
+
+--------
+
+//copy results to your local FS
+hadoop dfs -get /results_invidx/ /home/rym/Desktop/Labs_MR/
+
+
+//to do
+1. add a combiner
+
+

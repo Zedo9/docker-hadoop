@@ -1,0 +1,121 @@
+
+MapReduce Preliminary Labs 
+Instructor: Dr. Rim Moussa
+ 
+--Illustrative example #3 of MapReduce
+--
+
+//compile and create jar
+javac -classpath `hadoop classpath` -d /home/rym/Desktop/Labs_MR/TermFreq /home/rym/Desktop/Labs_MR/TermFreq/src/*.java 
+jar -cvf /home/rym/Desktop/Labs_MR/TermFreq.jar -C /home/rym/Desktop/Labs_MR/TermFreq/ .
+
+//format name node hadoop
+
+cd $HADOOP_HOME
+bin/hdfs namenode -format
+
+//start hadoop
+cd $HADOOP_HOME/sbin/
+start-dfs.sh
+start-yarn.sh
+jps
+-----------
+14626 NodeManager
+14453 ResourceManager
+13095 NameNode
+15066 Jps
+13499 DataNode
+13869 SecondaryNameNode
+-----------
+
+// make a directory named inv_files
+hadoop dfs -mkdir /inv_files
+// copy input files to your HDFS:
+hadoop dfs -copyFromLocal /home/rym/Desktop/Labs_MR/InvIdx/data/* /inv_files/
+hadoop dfs -ls /inv_files/
+
+
+hadoop jar /home/rym/Desktop/Labs_MR/TermFreq.jar src.TermFreq  /inv_files/ /results_tf/
+
+--------
+ hadoop jar /home/rym/Desktop/Labs_MR/TermFreq.jar src.TermFreq  /inv_files/ /results_tf/
+18/10/13 22:40:15 INFO client.RMProxy: Connecting to ResourceManager at /0.0.0.0:8032
+18/10/13 22:40:16 WARN mapreduce.JobResourceUploader: Hadoop command-line option parsing not performed. Implement the Tool interface and execute your application with ToolRunner to remedy this.
+18/10/13 22:40:16 INFO input.FileInputFormat: Total input paths to process : 2
+18/10/13 22:40:16 INFO mapreduce.JobSubmitter: number of splits:2
+18/10/13 22:40:16 INFO mapreduce.JobSubmitter: Submitting tokens for job: job_1539460673249_0004
+18/10/13 22:40:16 INFO impl.YarnClientImpl: Submitted application application_1539460673249_0004
+18/10/13 22:40:16 INFO mapreduce.Job: The url to track the job: http://rym-ThinkPad-T420:8088/proxy/application_1539460673249_0004/
+18/10/13 22:40:16 INFO mapreduce.Job: Running job: job_1539460673249_0004
+18/10/13 22:40:23 INFO mapreduce.Job: Job job_1539460673249_0004 running in uber mode : false
+18/10/13 22:40:23 INFO mapreduce.Job:  map 0% reduce 0%
+18/10/13 22:40:29 INFO mapreduce.Job:  map 100% reduce 0%
+18/10/13 22:40:35 INFO mapreduce.Job:  map 100% reduce 100%
+18/10/13 22:40:35 INFO mapreduce.Job: Job job_1539460673249_0004 completed successfully
+18/10/13 22:40:35 INFO mapreduce.Job: Counters: 49
+	File System Counters
+		FILE: Number of bytes read=88
+		FILE: Number of bytes written=344515
+		FILE: Number of read operations=0
+		FILE: Number of large read operations=0
+		FILE: Number of write operations=0
+		HDFS: Number of bytes read=288
+		HDFS: Number of bytes written=48
+		HDFS: Number of read operations=9
+		HDFS: Number of large read operations=0
+		HDFS: Number of write operations=2
+	Job Counters 
+		Launched map tasks=2
+		Launched reduce tasks=1
+		Data-local map tasks=2
+		Total time spent by all maps in occupied slots (ms)=7788
+		Total time spent by all reduces in occupied slots (ms)=2704
+		Total time spent by all map tasks (ms)=7788
+		Total time spent by all reduce tasks (ms)=2704
+		Total vcore-seconds taken by all map tasks=7788
+		Total vcore-seconds taken by all reduce tasks=2704
+		Total megabyte-seconds taken by all map tasks=7974912
+		Total megabyte-seconds taken by all reduce tasks=2768896
+	Map-Reduce Framework
+		Map input records=2
+		Map output records=11
+		Map output bytes=130
+		Map output materialized bytes=94
+		Input split bytes=202
+		Combine input records=11
+		Combine output records=6
+		Reduce input groups=5
+		Reduce shuffle bytes=94
+		Reduce input records=6
+		Reduce output records=5
+		Spilled Records=12
+		Shuffled Maps =2
+		Failed Shuffles=0
+		Merged Map outputs=2
+		GC time elapsed (ms)=251
+		CPU time spent (ms)=2420
+		Physical memory (bytes) snapshot=703389696
+		Virtual memory (bytes) snapshot=5770641408
+		Total committed heap usage (bytes)=551026688
+	Shuffle Errors
+		BAD_ID=0
+		CONNECTION=0
+		IO_ERROR=0
+		WRONG_LENGTH=0
+		WRONG_MAP=0
+		WRONG_REDUCE=0
+	File Input Format Counters 
+		Bytes Read=86
+	File Output Format Counters 
+		Bytes Written=48
+[rym:/home/rym/hadoop-2.7.0/sbin] 21s $ 
+
+
+--------
+
+//copy results to your local FS
+hadoop dfs -get /results_tf/ /home/rym/Desktop/Labs_MR/
+
+
+//to do
+1. return frequent terms, i.e terms which  have a support > v 
